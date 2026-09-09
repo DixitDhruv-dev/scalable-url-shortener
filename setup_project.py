@@ -1,27 +1,22 @@
 from pathlib import Path
 
 
-def create_core_structure():
+def create_db_structure():
     root = Path.cwd()
 
-    directories = [
-        root / "app" / "core",
-    ]
+    db_dir = root / "app" / "db"
 
     files = [
-        root / "app" / "core" / "__init__.py",
-        root / "app" / "core" / "config.py",
+        db_dir / "__init__.py",
+        db_dir / "database.py",
+        db_dir / "models.py",
     ]
 
-    print(f"Working directory: {root}")
-    print()
+    # Create directory
+    db_dir.mkdir(parents=True, exist_ok=True)
+    print(f"[DIR]  {db_dir.relative_to(root)}")
 
-    # Create directories
-    for directory in directories:
-        directory.mkdir(parents=True, exist_ok=True)
-        print(f"[DIR]  {directory.relative_to(root)}")
-
-    # Create files without overwriting existing files
+    # Create files
     for file in files:
         if file.exists():
             print(f"[SKIP] {file.relative_to(root)} already exists")
@@ -29,8 +24,8 @@ def create_core_structure():
             file.touch()
             print(f"[FILE] {file.relative_to(root)}")
 
-    print("\nCore structure created successfully.")
+    print("\nDatabase structure created successfully.")
 
 
 if __name__ == "__main__":
-    create_core_structure()
+    create_db_structure()
