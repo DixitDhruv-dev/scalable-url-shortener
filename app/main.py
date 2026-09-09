@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from app.api.routes.redirect import router as redirect_router
 from app.api.routes.urls import router as urls_router
 from app.core.config import get_settings
 
@@ -13,6 +14,8 @@ app = FastAPI(
 
 
 app.include_router(urls_router)
+app.include_router(redirect_router)
+
 
 
 @app.get("/health")
