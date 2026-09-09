@@ -42,7 +42,6 @@ Rather than being just a basic CRUD application, the project explores real backe
 - Testing and code quality
 
 ---
-
 ## 🏗️ Architecture
 
 ```text
@@ -72,8 +71,7 @@ Rather than being just a basic CRUD application, the project explores real backe
        │  Persistence │ │ Read-through │
        │              │ │    Cache     │
        └──────────────┘ └──────────────┘
----
-## Redirect Flow
+🔄 Redirect Flow
 GET /{short_code}
        │
        ▼
@@ -100,8 +98,7 @@ GET /{short_code}
    │ Cache result
    │
    └──────────► HTTP 307 Redirect
----
-## 🚀 Current Functionality
+🚀 Current Functionality
 Feature	Status
 Short URL creation	✅
 Cryptographically secure short codes	✅
@@ -126,6 +123,9 @@ Production deployment	🟡
 Full CI/CD pipeline	🟡
 
 ✅ Implemented · 🟡 Planned
+
+
+The important fix is the **closing triple backticks (` ``` `)** immediately after each ASCII diagram. This keeps `Redirect Flow` and `Current Functionality` as independent Markdown sections instead of making them part of the previous code block.
 
 🔌 API
 Create a Short URL
