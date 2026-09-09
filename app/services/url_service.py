@@ -1,6 +1,10 @@
 import secrets
 import string
+from datetime import datetime, timezone
 
+from sqlalchemy import select
+
+from app.cache.redis import cache_url, get_cached_url
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -58,3 +62,39 @@ def create_url(
     db.refresh(url)
 
     return url
+
+def get_original_url(
+    db: Session,
+    short_code: str,
+) -> str:
+    cached_url = get_cached_url(short_code)
+
+    if cached_url is not None:
+        return cached_url
+
+    url = db.scalar(
+        select(URL).where(URL.short_code == short_code)
+    )
+
+    if url is None:
+        raise ValueError("Short URL not found")
+
+    if url.expires_at is not None:
+        now = datetime.now(timezone.utc)
+
+        if url.expires_at <= now:
+            raise ValueError("Short URL has expired")
+
+        ttl = int(
+            (url.expires_at - now).total_seconds()
+        )
+    else:
+        ttl = None
+
+    cache_url(
+        short_code=url.short_code,
+        original_url=url.original_url,
+        ttl=ttl,
+    )
+
+    return url.original_url
