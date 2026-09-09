@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
-from pydantic import AnyHttpUrl, BaseModel, Field
+from pydantic import AnyHttpUrl, BaseModel, Field, field_validator
 
 
 class URLCreate(BaseModel):
@@ -12,6 +12,26 @@ class URLCreate(BaseModel):
         pattern=r"^[a-zA-Z0-9_-]+$",
     )
     expires_at: datetime | None = None
+
+    @field_validator("expires_at")
+    @classmethod
+    def validate_expiration(cls, value: datetime | None):
+        if value is None:
+            return None
+
+        if value.tzinfo is None:
+            raise ValueError(
+                "expires_at must include timezone information"
+            )
+
+        expiration = value.astimezone(timezone.utc)
+
+        if expiration <= datetime.now(timezone.utc):
+            raise ValueError(
+                "expires_at must be in the future"
+            )
+
+        return expiration
 
 
 class URLResponse(BaseModel):

@@ -1,12 +1,9 @@
-from datetime import datetime, timezone
-
 from redis import Redis
 
 from app.core.config import get_settings
 
 
 settings = get_settings()
-
 
 redis_client = Redis.from_url(
     settings.redis_url,
@@ -25,13 +22,13 @@ def cache_url(
 ) -> None:
     key = f"url:{short_code}"
 
-    if ttl is not None:
+    if ttl is not None and ttl > 0:
         redis_client.setex(
             key,
             ttl,
             original_url,
         )
-    else:
+    elif ttl is None:
         redis_client.set(
             key,
             original_url,
