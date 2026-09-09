@@ -104,36 +104,29 @@ GET /{short_code}
 ```
 ---
 ## 🚀 Current Functionality
-Feature	Status
-Short URL creation	✅
-Cryptographically secure short codes	✅
-Seven-character short codes	✅
-Custom aliases	✅
-Duplicate alias protection	✅
-URL expiration	✅
-Redis caching	✅
-Expiration-aware Redis TTL	✅
-Redirect endpoint	✅
-404 handling	✅
-410 expired URL handling	✅
-PostgreSQL persistence	✅
-SQLAlchemy ORM	✅
-Health endpoint	✅
-Alembic integration	🟡
-Authentication	🟡
-API rate limiting	🟡
-Click analytics	🟡
-QR code generation	🟡
-Production deployment	🟡
-Full CI/CD pipeline	🟡
+```text
+- Feature	Status
+- Short URL creation	✅
+- Cryptographically secure short codes	✅
+- Seven-character short codes	✅
+- Custom aliases	✅
+- Duplicate alias protection	✅
+- URL expiration	✅
+- Redis caching	✅
+- Expiration-aware Redis TTL	✅
+- Redirect endpoint	✅
+- 404 handling	✅
+- 410 expired URL handling	✅
+- PostgreSQL persistence	✅
+- SQLAlchemy ORM	✅
+- Health endpoint	✅
 
-✅ Implemented · 🟡 Planned
+```
+---
 
-
-The important fix is the **closing triple backticks (` ``` `)** immediately after each ASCII diagram. This keeps `Redirect Flow` and `Current Functionality` as independent Markdown sections instead of making them part of the previous code block.
-
-🔌 API
-Create a Short URL
+## 🔌 API
+### Create a Short URL
+```text
 POST /urls
 Content-Type: application/json
 Request
@@ -142,10 +135,11 @@ Request
   "custom_alias": "docs",
   "expires_at": "2026-12-31T23:59:59Z"
 }
-
+```
 If custom_alias is omitted, the service automatically generates a unique seven-character short code.
 
-Example Response
+#### Example Response
+```text
 {
   "id": 1,
   "original_url": "https://example.com/a/very/long/url",
@@ -154,36 +148,41 @@ Example Response
   "custom_alias": "docs",
   "expires_at": "2026-12-31T23:59:59Z"
 }
-Redirect to Original URL
+```
+### Redirect to Original URL
+```text
 GET /{short_code}
-
+```
 Example:
-
+```text
 GET /docs
-
+```
 A valid short code returns:
 
-307 Temporary Redirect
-Possible Responses
-Status	Meaning
-307	Redirect to original URL
-404	Short URL does not exist
-410	Short URL has expired
-Health Check
+- 307 Temporary Redirect
+- Possible Responses
+- Status	Meaning
+- 307	Redirect to original URL
+- 404	Short URL does not exist
+- 410	Short URL has expired
+- Health Check
+```text
 GET /health
-
-Example response:
-
+```
+#### Example response:
+```text
 {
   "status": "ok",
   "environment": "development"
 }
-🧠 Redis Caching Strategy
+```
+---
+## 🧠 Redis Caching Strategy
 
 Redis is used on the short-code lookup path to reduce repeated database queries.
 
 The lookup flow is:
-
+```text
 Request
    │
    ▼
@@ -204,42 +203,47 @@ Redis lookup
           │
           ▼
       Return URL
-
+```
 For URLs with an expiration time, the Redis cache entry receives a TTL based on the remaining lifetime of the URL.
 
 This keeps cached data aligned with URL expiration semantics.
 
-🔐 Short-Code Generation
+---
+## 🔐 Short-Code Generation
 
 When a custom alias is not provided, the service generates a random seven-character identifier.
 
 The character set contains:
-
+```text
 abcdefghijklmnopqrstuvwxyz
 ABCDEFGHIJKLMNOPQRSTUVWXYZ
 0123456789
-
+```
 The implementation uses Python's secrets module for random selection.
 
 Generated codes are checked against existing database records before being persisted.
 
-🛠️ Tech Stack
+---
+## 🛠️ Tech Stack
 Layer	Technology
-Language	Python 3.12+
-API Framework	FastAPI
-ASGI Server	Uvicorn
-Validation	Pydantic
-Configuration	Pydantic Settings
-ORM	SQLAlchemy
-Database	PostgreSQL 16
-Cache	Redis 7
-Migrations	Alembic
-Testing	Pytest
-HTTP Testing	HTTPX
-Linting	Ruff
-Infrastructure	Docker Compose
-CI/CD	GitHub Actions
-📁 Project Structure
+- Language ->	Python 3.12+
+- API Framework ->	FastAPI
+- ASGI Server	->	Uvicorn
+- Validation	->	Pydantic
+- Configuration	->	Pydantic Settings
+- ORM	->	SQLAlchemy
+- Database	->	PostgreSQL 16
+- Cache	->	Redis 7
+- Migrations	->	Alembic
+- Testing	->	Pytest
+- HTTP Testing	->	HTTPX
+- Linting	->	Ruff
+- Infrastructure	->	Docker Compose
+- CI/CD	->	GitHub Actions
+
+---
+## 📁 Project Structure
+```text
 scalable-url-shortener/
 │
 ├── app/
@@ -270,70 +274,92 @@ scalable-url-shortener/
 ├── docker-compose.yml
 ├── pyproject.toml
 └── README.md
-🐳 Local Development
+```
+---
+
+## 🐳 Local Development
 Prerequisites
 
 Make sure you have:
 
-Python 3.12+
-Docker
-Docker Compose
-Git
+- Python 3.12+
+- Docker
+- Docker Compose
+- Git
+```text
 1. Clone the Repository
+```text
 git clone https://github.com/DixitDhruv-dev/scalable-url-shortener.git
 cd scalable-url-shortener
+```
 2. Create a Virtual Environment
 Windows PowerShell
+```text
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 macOS / Linux
 python3 -m venv .venv
 source .venv/bin/activate
+```
 3. Install Dependencies
+```text
 pip install -e ".[dev]"
+```
 4. Start PostgreSQL and Redis
+```text
 docker compose up -d
-
+```
 This starts:
 
 PostgreSQL → localhost:5432
 Redis      → localhost:6379
 5. Start the API
+```text
 uvicorn app.main:app --reload
-
+```
 The API will be available at:
-
+```text
 http://localhost:8000
-📚 API Documentation
+```
+
+---
+## 📚 API Documentation
 
 FastAPI automatically provides interactive API documentation.
 
 Swagger UI
+```text
 http://localhost:8000/docs
+```
 ReDoc
+```text
 http://localhost:8000/redoc
+```
 
 These interfaces can be used to explore and test the API directly from your browser.
 
-🧪 Testing
+---
+## 🧪 Testing
 
 Run the test suite:
-
+```text
 pytest
-
+```
 Run linting:
-
+```text
 ruff check .
-
+```
 Development dependencies include:
 
-pytest
-httpx
-ruff
-🗄️ Infrastructure
+- pytest
+- httpx
+- ruff
+
+---
+## 🗄️ Infrastructure
 
 The local development environment uses Docker Compose.
-
+```text
 ┌─────────────────────────────────────────┐
 │             Docker Compose              │
 │                                         │
@@ -344,15 +370,16 @@ The local development environment uses Docker Compose.
 │  └────────────────┘  └────────────────┘ │
 │                                         │
 └─────────────────────────────────────────┘
-
+```
 PostgreSQL provides persistent URL storage.
 
 Redis provides low-latency access to frequently requested short URLs.
 
-📈 Scalability Roadmap
+---
+### 📈 Scalability Roadmap
 
 The project is designed to evolve from a single API instance into a horizontally scalable backend.
-
+```text
                     ┌───────────────┐
                     │ Load Balancer │
                     └───────┬───────┘
@@ -373,50 +400,54 @@ The project is designed to evolve from a single API instance into a horizontally
                      ┌──────▼──────┐
                      │ PostgreSQL  │
                      └─────────────┘
-
+```
 Future engineering work includes:
 
-Authentication and user accounts
-API rate limiting
-Click analytics
-QR code generation
-Metrics and observability
-Structured logging
-Production deployment
-Horizontal API scaling
-CI/CD automation
-Database optimization
-Improved cache invalidation
-🔐 Engineering Priorities
-Low-Latency Redirects
+- Authentication and user accounts
+- API rate limiting
+- Click analytics
+- QR code generation
+- Metrics and observability
+- Structured logging
+- Production deployment
+- Horizontal API scaling
+- CI/CD automation
+- Database optimization
+- Improved cache invalidation
 
-Redis reduces repeated PostgreSQL lookups for frequently accessed short URLs.
+---
+## 🔐 Engineering Priorities
+- Low-Latency Redirects
 
-Collision Safety
+- Redis reduces repeated PostgreSQL lookups for frequently accessed short URLs.
 
-Generated short codes are checked against existing records before insertion.
+- Collision Safety
 
-Consistent Expiration
+- Generated short codes are checked against existing records before insertion.
 
-Expiration is validated during lookup and reflected in Redis TTLs.
+- Consistent Expiration
 
-Separation of Responsibilities
+- Expiration is validated during lookup and reflected in Redis TTLs.
+
+- Separation of Responsibilities
 
 The application separates:
-
+```text
 API Layer
     ↓
 Service Layer
     ↓
 Database / Cache Layer
-
+```
 This keeps business logic independent from HTTP routing and infrastructure details.
 
-Reproducible Development
+- Reproducible Development
 
 Docker Compose provides consistent local PostgreSQL and Redis infrastructure.
 
-🗺️ Roadmap
+---
+## 🗺️ Roadmap
+```text
 [x] FastAPI application foundation
 [x] URL creation
 [x] Random short-code generation
@@ -428,7 +459,8 @@ Docker Compose provides consistent local PostgreSQL and Redis infrastructure.
 [x] PostgreSQL persistence
 [x] Health endpoint
 [x] Docker Compose infrastructure
-
+```
+```text
 [ ] Authentication & user accounts
 [ ] API rate limiting
 [ ] Click analytics
@@ -437,12 +469,15 @@ Docker Compose provides consistent local PostgreSQL and Redis infrastructure.
 [ ] Production deployment
 [ ] Horizontal scaling
 [ ] Complete CI/CD pipeline
-🤝 Contributing
+```
+
+---
+## 🤝 Contributing
 
 Contributions, bug reports, and architectural discussions are welcome.
 
 Typical workflow:
-
+```text
 Fork
   ↓
 Create branch
@@ -454,10 +489,11 @@ Test
 Lint
   ↓
 Pull Request
-
+```
 For larger architectural changes, open an issue first to discuss the proposed approach.
 
-👨‍💻 Author
+---
+## 👨‍💻 Author
 <div align="center">
 Dhruv Dixit
 
@@ -465,7 +501,6 @@ Backend Engineering · AI · Cloud · System Design
 
 </div>
 <div align="center">
-⚡ Building systems that scale beyond the demo.
 
 ⭐ If you find this project interesting, consider giving it a star.
 
