@@ -72,7 +72,8 @@ Rather than being just a basic CRUD application, the project explores real backe
        │  Persistence │ │ Read-through │
        │              │ │    Cache     │
        └──────────────┘ └──────────────┘
-Redirect Flow
+---
+## Redirect Flow
 GET /{short_code}
        │
        ▼
@@ -99,7 +100,8 @@ GET /{short_code}
    │ Cache result
    │
    └──────────► HTTP 307 Redirect
-🚀 Current Functionality
+---
+## 🚀 Current Functionality
 Feature	Status
 Short URL creation	✅
 Cryptographically secure short codes	✅
