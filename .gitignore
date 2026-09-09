@@ -31,3 +31,5 @@ build/
 
 # Alembic
 *.db
+
+setup_project.py

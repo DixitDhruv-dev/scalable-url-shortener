@@ -1,36 +1,27 @@
 from pathlib import Path
 
 
-def create_project_structure():
-    # Always work from the directory where this script is executed.
+def create_core_structure():
     root = Path.cwd()
 
     directories = [
-        root / "app",
-        root / "tests",
-        root / ".github",
-        root / ".github" / "workflows",
+        root / "app" / "core",
     ]
 
     files = [
-        root / "app" / "__init__.py",
-        root / "app" / "main.py",
-        root / "tests" / "__init__.py",
-        root / ".gitignore",
-        root / ".env.example",
-        root / "pyproject.toml",
-        root / "README.md",
+        root / "app" / "core" / "__init__.py",
+        root / "app" / "core" / "config.py",
     ]
 
     print(f"Working directory: {root}")
     print()
 
-    # Create directories.
+    # Create directories
     for directory in directories:
         directory.mkdir(parents=True, exist_ok=True)
         print(f"[DIR]  {directory.relative_to(root)}")
 
-    # Create files without overwriting existing files.
+    # Create files without overwriting existing files
     for file in files:
         if file.exists():
             print(f"[SKIP] {file.relative_to(root)} already exists")
@@ -38,8 +29,8 @@ def create_project_structure():
             file.touch()
             print(f"[FILE] {file.relative_to(root)}")
 
-    print("\nProject structure created successfully.")
+    print("\nCore structure created successfully.")
 
 
 if __name__ == "__main__":
-    create_project_structure()
+    create_core_structure()
